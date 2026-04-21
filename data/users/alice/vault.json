@@ -1,0 +1,8 @@
+{
+  "credentials": {
+    "facebook.com": {
+      "login": "alice",
+      "password": "123"
+    }
+  }
+}
