@@ -1,0 +1,11 @@
+{
+  "owner": "amr",
+  "ciphertext": "",
+  "nonce": "",
+  "tag": "",
+  "signature": null,
+  "meta": {
+    "version": 1
+  },
+  "dev_plain_credentials": []
+}

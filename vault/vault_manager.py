@@ -5,8 +5,10 @@ from vault.storage import (
     write_json,
     file_exists,
     validate_username,
+    get_public_key_path,
+    get_private_key_path,
 )
-
+from crypto.elgamal import initialize_user_keys
 
 
 #  helpers
@@ -46,6 +48,9 @@ def find_index(vault: dict, site: str):
 def initialize_user(username: str):
     validate_username(username)
     create_user_dir(username)
+    private_key_path = get_private_key_path(username)
+    public_key_path = get_public_key_path(username)
+    initialize_user_keys(private_key_path, public_key_path)
     initialize_empty_vault(username)
 
 
@@ -104,7 +109,7 @@ def update_credential(username: str, site: str, new_login: str, new_password: st
 
     save_vault(username, vault)
 
-    
+
 
 def delete_credential(username: str, site: str):
     vault = load_vault(username)
