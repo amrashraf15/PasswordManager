@@ -1,36 +1,66 @@
-def run_cli():
-    while True:
-        print("\n=== Secure Password Manager ===")
-        print("1. init-user")
-        print("2. add-credential")
-        print("3. get-credential")
-        print("4. update-credential")
-        print("5. delete-credential")
-        print("6. verify-vault")
-        print("7. export-vault")
-        print("8. import-vault")
-        print("9. exit")
+from vault.vault_manager import (
+    initialize_user,
+    add_credential,
+    get_credential,
+    update_credential,
+    delete_credential,
+)
 
-        choice = input("Choose: ").strip()
 
-        if choice == "1":
-            handle_init_user()
-        elif choice == "2":
-            handle_add_credential()
-        elif choice == "3":
-            handle_get_credential()
-        elif choice == "4":
-            handle_update_credential()
-        elif choice == "5":
-            handle_delete_credential()
-        elif choice == "6":
-            handle_verify_vault()
-        elif choice == "7":
-            handle_export_vault()
-        elif choice == "8":
-            handle_import_vault()
-        elif choice == "9":
-            print("Goodbye.")
-            break
-        else:
-            print("Invalid choice.")
+def handle_init_user():
+    username = input("Enter username: ")
+    initialize_user(username)
+    print("User initialized successfully.")
+
+
+def handle_add_credential():
+    username = input("Username: ")
+    site = input("Site: ")
+    login = input("Login: ")
+    password = input("Password: ")
+
+    add_credential(username, site, login, password)
+    print("Credential added.")
+
+
+def handle_get_credential():
+    username = input("Username: ")
+    site = input("Site: ")
+
+    cred = get_credential(username, site)
+
+    if not cred:
+        print("Not found.")
+    else:
+        print(cred)
+
+
+def handle_update_credential():
+    username = input("Username: ")
+    site = input("Site: ")
+    login = input("New login: ")
+    password = input("New password: ")
+
+    update_credential(username, site, login, password)
+    print("Updated.")
+
+
+def handle_delete_credential():
+    username = input("Username: ")
+    site = input("Site: ")
+
+    delete_credential(username, site)
+    print("Deleted.")
+
+
+# placeholders
+def handle_verify_vault():
+    print("Not implemented yet")
+
+
+def handle_export_vault():
+    print("Not implemented yet")
+
+
+def handle_import_vault():
+    print("Not implemented yet")
