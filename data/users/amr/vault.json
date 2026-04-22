@@ -1,11 +1,10 @@
 {
   "owner": "amr",
-  "ciphertext": "",
-  "nonce": "",
-  "tag": "",
+  "ciphertext": "86FC2wNFmZaQMv8P+9O59ioomgrye7ruSp38YsE8ljRLm5+ftua2ptwIwQtSk1uOcCErkHbynLD5AQxIHhB37tSHhkU/dOg=",
+  "nonce": "6ISIgYWhzh+eadb1SiSwJg==",
+  "tag": "GG76V/7qoVCp2/X6YfTZDg==",
   "signature": null,
   "meta": {
     "version": 1
-  },
-  "dev_plain_credentials": []
+  }
 }

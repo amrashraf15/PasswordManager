@@ -62,6 +62,8 @@ def factorize(n: int) -> list[int]:
         factors.append(n)
     return factors
 
+    
+
 def is_primitive_root(alpha:int,p:int) -> bool:
     if p < 3:
         return False
