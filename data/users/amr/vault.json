@@ -1,10 +1,11 @@
 {
   "owner": "amr",
-  "ciphertext": "86FC2wNFmZaQMv8P+9O59ioomgrye7ruSp38YsE8ljRLm5+ftua2ptwIwQtSk1uOcCErkHbynLD5AQxIHhB37tSHhkU/dOg=",
-  "nonce": "6ISIgYWhzh+eadb1SiSwJg==",
-  "tag": "GG76V/7qoVCp2/X6YfTZDg==",
-  "signature": null,
-  "meta": {
-    "version": 1
+  "ciphertext": "W6jVnUmXuasrGKr4p47h8+/wRDSHf0Kg7g90tPoKgaOnRQ96EoWbO3EOt5ykTAREIaEf8Lo7v5k3SFAja0qcUfspCiuDt8zEFh0=",
+  "nonce": "qE3ouexzPSpldYR/1OMvRA==",
+  "tag": "Ur5CNyEDaEcGm4FlvlmN7Q==",
+  "signature": {
+    "r": 444,
+    "s": 438,
+    "message_hash": 288
   }
 }

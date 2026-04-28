@@ -7,6 +7,8 @@ from vault.vault_manager import (
 )
 
 
+
+
 def handle_init_user():
     username = input("Enter username: ")
     master_password = input("Enter Master Password: ")
@@ -41,9 +43,12 @@ def handle_get_credential():
     cred = get_credential(username, master_password, site)
 
     if not cred:
-        print("Not found.")
+        print("Credintal Not found.")
     else:
-        print(cred)
+        print("\n=== Credential ===")
+        print(f"Site: {cred['site']}")
+        print(f"Login Identifier: {cred['login_identifier']}")
+        print(f"Password: {cred['password']}")
 
 
 def handle_update_credential():

@@ -31,8 +31,6 @@ def generate_public_key(p:int,alpha:int,private_key:int) -> int:
 
 # keypair generation
 
-
-
 def generate_keypair() ->tuple[dict,dict]:
     params = load_elgamal_params()
     p = params["p"]

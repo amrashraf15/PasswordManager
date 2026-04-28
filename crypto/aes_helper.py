@@ -8,7 +8,7 @@ import json
 # Encrypt Each credential list using AES-GCM. Returns dict with ciphertext, nonce, tag.
 def encrypt_data(key: bytes, data: list[dict]) -> dict:
 
-    # Convert Python object → bytes
+    # Convert Python object to bytes
     plaintext = json.dumps(data).encode("utf-8")
 
     cipher = AES.new(key, AES.MODE_GCM)
