@@ -1,3 +1,6 @@
+import json
+
+import vault
 from vault.storage import (
     create_user_dir,
     get_vault_path,
@@ -11,6 +14,7 @@ from vault.storage import (
 from crypto.elgamal import initialize_user_keys
 from crypto.hash_helper import sha256
 from crypto.aes_helper import encrypt_data, decrypt_data
+from vault.signer import sign_vault_data, verify_vault_data
 
 
 #  helpers
@@ -102,11 +106,16 @@ def add_credential(username: str, master_password: str,site: str, login_identifi
     vault["nonce"] = encrypted["nonce"]
     vault["tag"] = encrypted["tag"]
 
+    vault = sign_vault_data(vault, get_private_key_path(username))
     save_vault(username, vault)
 
 
 def get_credential(username: str,master_password: str, site: str):
     vault = load_vault(username)
+
+    # Verify signature on encrypted vault content before decryption
+    if not verify_vault_data(vault, get_public_key_path(username)):
+        raise ValueError("Vault signature is invalid! The vault may have been tampered with.")
     credentials = decrypt_credentials(vault, master_password)
 
     idx = find_index(credentials, site)
@@ -136,6 +145,7 @@ def update_credential(username: str, master_password: str, site: str, new_login_
     vault["nonce"] = encrypted["nonce"]
     vault["tag"] = encrypted["tag"]
 
+    vault = sign_vault_data(vault, get_private_key_path(username))
     save_vault(username, vault)
 
 
@@ -153,5 +163,5 @@ def delete_credential(username: str, master_password: str, site: str):
     vault["ciphertext"] = encrypted["ciphertext"]
     vault["nonce"] = encrypted["nonce"]
     vault["tag"] = encrypted["tag"]
-
+    vault = sign_vault_data(vault, get_private_key_path(username))
     save_vault(username, vault)
