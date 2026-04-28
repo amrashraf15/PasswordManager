@@ -1,4 +1,3 @@
-import vault
 from vault.storage import (
     create_user_dir,
     get_vault_path,
