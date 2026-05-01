@@ -1,6 +1,3 @@
-import json
-
-import vault
 from vault.storage import (
     create_user_dir,
     get_vault_path,
@@ -10,6 +7,7 @@ from vault.storage import (
     validate_username,
     get_public_key_path,
     get_private_key_path,
+    get_user_dir
 )
 from crypto.elgamal import initialize_user_keys
 from crypto.hash_helper import sha256
@@ -27,7 +25,11 @@ def decrypt_credentials(vault:dict , master_password:str) -> list[dict]:
 
 def encrypt_credentials(credentials: list[dict], master_password: str) ->dict:
     key = sha256(master_password)
-    return encrypt_data(key,credentials)
+    try:
+        return encrypt_data(key,credentials)
+    except Exception:
+        raise  ValueError("Invalid master password ")
+    
 
 def empty_vault(username: str) -> dict:
     return {
@@ -57,16 +59,18 @@ def find_index(credentials: list[dict], site: str) -> int:
     return -1
 
 
-
-
-
-
 # Initialize User
 def initialize_user(username: str, master_password: str):
     validate_username(username)
+
+    if get_user_dir(username).exists():
+        raise ValueError("Username already exists. Please choose another username.")
+
     create_user_dir(username)
+
     private_key_path = get_private_key_path(username)
     public_key_path = get_public_key_path(username)
+
     initialize_user_keys(private_key_path, public_key_path)
     initialize_empty_vault(username, master_password)
 

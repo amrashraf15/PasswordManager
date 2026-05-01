@@ -54,7 +54,7 @@ def run_cli():
             break
 
         else:
-            print("Invalid choice.")
+            print("Invalid choice. Please choose a number from 1 to 9.")
 
 
 if __name__ == "__main__":
