@@ -81,6 +81,8 @@ def initialize_empty_vault(username: str,master_password: str):
     vault["ciphertext"] = encrypted_vault["ciphertext"]
     vault["nonce"] = encrypted_vault["nonce"]
     vault["tag"] = encrypted_vault["tag"]
+    
+    vault = sign_vault_data(vault, get_private_key_path(username))
     write_json(path, vault)
 
 
