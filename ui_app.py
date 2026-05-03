@@ -1,4 +1,5 @@
 import streamlit as st
+import threading
 
 from vault.vault_manager import (
     initialize_user,
@@ -8,7 +9,7 @@ from vault.vault_manager import (
     delete_credential,
 )
 from vault.signer import verify_user_vault
-from exchange.exporter import secure_export_vault
+from exchange.exporter import run_sender, run_recipient
 
 
 st.set_page_config(
@@ -55,7 +56,8 @@ operation = st.sidebar.selectbox(
         "Update Credential",
         "Delete Credential",
         "Verify Vault",
-        "Export Vault",
+        "Export Vault (Sender)",
+        "Import Vault (Recipient)",
     ],
 )
 
@@ -218,26 +220,93 @@ elif operation == "Verify Vault":
         safe_action(action)
 
 
-elif operation == "Export Vault":
-    st.header("Export Vault")
+elif operation == "Export Vault (Sender)":
+    st.header("Export Vault — Sender")
+    st.info("Start a server and wait for the recipient to connect. Run Import Vault on another terminal/tab.")
 
-    sender_username = st.text_input("Sender Username")
-    sender_password = st.text_input("Sender Master Password", type="password")
-    recipient_username = st.text_input("Recipient Username")
-    recipient_password = st.text_input("Recipient Master Password", type="password")
+    username = st.text_input("Your Username")
+    master_password = st.text_input("Your Master Password", type="password")
+    port = st.number_input("Port", value=5555, min_value=1024, max_value=65535, step=1)
 
-    if st.button("Export Vault"):
+    if st.button("Start Export Server"):
         def action():
-            clean_sender = required(sender_username, "Sender username")
-            clean_sender_pwd = required(sender_password, "Sender master password")
-            clean_recipient = required(recipient_username, "Recipient username")
-            clean_recipient_pwd = required(recipient_password, "Recipient master password")
+            clean_username = required(username, "Username")
+            clean_password = required(master_password, "Master password")
 
-            success = secure_export_vault(clean_sender, clean_sender_pwd, clean_recipient, clean_recipient_pwd)
+            messages = []
+            result = {"success": False, "error": None}
 
-            if success:
-                st.success("Vault exported and imported successfully.")
+            def on_status(msg):
+                messages.append(msg)
+
+            def run():
+                try:
+                    result["success"] = run_sender(clean_username, clean_password, int(port), on_status=on_status)
+                except Exception as e:
+                    result["error"] = str(e)
+
+            thread = threading.Thread(target=run)
+            thread.start()
+
+            with st.spinner("Waiting for recipient to connect..."):
+                thread.join(timeout=120)
+
+            for msg in messages:
+                st.write(msg)
+
+            if result["error"]:
+                st.error(f"Error: {result['error']}")
+            elif result["success"]:
+                st.success("Vault exported successfully!")
+            elif thread.is_alive():
+                st.warning("Timed out waiting for recipient.")
             else:
                 st.error("Export failed.")
+
+        safe_action(action)
+
+
+elif operation == "Import Vault (Recipient)":
+    st.header("Import Vault — Recipient")
+    st.info("Connect to a sender who is waiting. The sender must start Export Vault first.")
+
+    username = st.text_input("Your Username")
+    master_password = st.text_input("Your Master Password", type="password")
+    host = st.text_input("Sender Host", value="localhost")
+    port = st.number_input("Port", value=5555, min_value=1024, max_value=65535, step=1)
+
+    if st.button("Connect & Import"):
+        def action():
+            clean_username = required(username, "Username")
+            clean_password = required(master_password, "Master password")
+            clean_host = required(host, "Host")
+
+            messages = []
+            result = {"success": False, "error": None}
+
+            def on_status(msg):
+                messages.append(msg)
+
+            def run():
+                try:
+                    result["success"] = run_recipient(clean_username, clean_password, clean_host, int(port), on_status=on_status)
+                except Exception as e:
+                    result["error"] = str(e)
+
+            thread = threading.Thread(target=run)
+            thread.start()
+
+            with st.spinner("Connecting to sender..."):
+                thread.join(timeout=60)
+
+            for msg in messages:
+                st.write(msg)
+
+            if result["error"]:
+                st.error(f"Error: {result['error']}")
+            elif result["success"]:
+                st.success("Vault imported successfully!")
+            else:
+                st.error("Import failed.")
 
         safe_action(action)

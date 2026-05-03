@@ -6,7 +6,7 @@ from vault.vault_manager import (
     delete_credential,
 )
 from vault.signer import verify_user_vault
-from exchange.exporter import secure_export_vault
+from exchange.exporter import run_sender, run_recipient
 
 
 def handle_init_user():
@@ -80,24 +80,31 @@ def handle_verify_vault():
         print("Vault signature is INVALID! The vault may have been tampered with.")
 
 def handle_export_vault():
-    sender_username = input("Sender Username: ")
-    sender_password = input("Sender Master Password: ")
-    recipient_username = input("Recipient Username: ")
-    recipient_password = input("Recipient Master Password: ")
-    success = secure_export_vault(sender_username, sender_password, recipient_username, recipient_password)
-    if success:
-        print("Vault exported and imported successfully.")
-    else:
-        print("Export failed.")
+    username = input("Username: ")
+    password = input("Master Password: ")
+    port_str = input("Port (default 5555): ").strip()
+    port = int(port_str) if port_str else 5555
+    try:
+        run_sender(username, password, port)
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+    except ValueError as e:
+        print(f"Error: {e}")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
 
 
 def handle_import_vault():
-    sender_username = input("Sender Username: ")
-    sender_password = input("Sender Master Password: ")
-    recipient_username = input("Recipient Username (you): ")
-    recipient_password = input("Recipient Master Password: ")
-    success = secure_export_vault(sender_username, sender_password, recipient_username, recipient_password)
-    if success:
-        print("Vault imported successfully.")
-    else:
-        print("Import failed.")
+    username = input("Username: ")
+    password = input("Master Password: ")
+    host = input("Host (default localhost): ").strip() or "localhost"
+    port_str = input("Port (default 5555): ").strip()
+    port = int(port_str) if port_str else 5555
+    try:
+        run_recipient(username, password, host, port)
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+    except ValueError as e:
+        print(f"Error: {e}")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
