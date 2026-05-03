@@ -7,7 +7,8 @@ from vault.vault_manager import (
     update_credential,
     delete_credential,
 )
-
+from vault.signer import verify_user_vault
+from exchange.exporter import secure_export_vault
 
 st.set_page_config(
     page_title="Secure Password Manager",
@@ -52,6 +53,8 @@ operation = st.sidebar.selectbox(
         "Get Credential",
         "Update Credential",
         "Delete Credential",
+        "Verify Vault",
+        "Export Vault"
     ],
 )
 
@@ -191,5 +194,50 @@ elif operation == "Delete Credential":
             )
 
             st.success("Credential deleted successfully.")
+
+        safe_action(action)
+
+elif operation == "Verify Vault":
+    st.header("Verify Vault")
+
+    username = st.text_input("Username")
+
+    if st.button("Verify Vault"):
+        def action():
+            try:
+                clean_username = required(username, "Username")
+                valid = verify_user_vault(clean_username)
+                if valid:
+                    st.success("Vault signature is valid.")
+                else:
+                    st.error("Vault signature is INVALID! ")
+            except FileNotFoundError:
+                st.warning(f"No Vault Found for user {clean_username} , Please initialize the user first")
+
+        safe_action(action)
+
+elif operation == "Export Vault":
+    st.header("Export Vault to Another User")
+
+    sender_username = st.text_input("Sender Username")
+    sender_password = st.text_input("Sender Master Password", type="password")
+    recipient_username = st.text_input("Recipient Username")
+    recipient_password = st.text_input("Recipient Master Password", type="password")
+
+    if st.button("Export Vault"):
+        def action():
+            clean_sender = required(sender_username, "Sender Username")
+            clean_sender_pwd = required(sender_password, "Sender Master Password")
+            clean_recipient = required(recipient_username, "Recipient Username")
+            clean_recipient_pwd = required(recipient_password, "Recipient Master Password")
+
+            success = secure_export_vault(
+                clean_sender, clean_sender_pwd,
+                clean_recipient, clean_recipient_pwd
+            )
+            if success:
+                st.success(f"Vault successfully exported from {clean_sender} to {clean_recipient} ")
+            else:
+                st.error("Vault export failed.")
 
         safe_action(action)

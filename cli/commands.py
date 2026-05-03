@@ -5,6 +5,8 @@ from vault.vault_manager import (
     update_credential,
     delete_credential,
 )
+from vault.signer import verify_user_vault
+from exchange.exporter import secure_export_vault
 
 
 
@@ -71,13 +73,32 @@ def handle_delete_credential():
     print("Deleted successfully.")
 
 
-# placeholders
+
 def handle_verify_vault():
-    print("Not implemented yet")
+    username = input("Username: ")
+    try:
+        valid = verify_user_vault(username)
+        if valid:
+            print("Vault signature is valid.")
+        else:
+            print("Vault signature is invalid!")
+    except FileNotFoundError:
+        print("User vault does not exist.")
+    except Exception as e:
+        print(f"Error: {e}")
 
 
 def handle_export_vault():
-    print("Not implemented yet")
+    sender = input("Sender Username: ")
+    sender_pwd = input("Sender Master Password: ")
+    recipient = input("Recipient Username: ")
+    recipient_pwd = input("Recipient Master Password: ")
+
+    try:
+        secure_export_vault(sender, sender_pwd, recipient, recipient_pwd)
+        print(f"Vault exported successfully from {sender} to {recipient}.")
+    except Exception as e:
+        print(f"Export failed: {e}")
 
 
 def handle_import_vault():
