@@ -90,51 +90,23 @@ The export/import workflow uses Diffie–Hellman key exchange to derive a shared
 
 # Installation
 
-## 1. Clone the Repository
+##  Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/password_manager.git
+git clone https://github.com/amrashraf15/password_manager.git
 cd password_manager
 ```
 
-## 2. Create a Virtual Environment
-
-```bash
-python -m venv venv
-```
-
-### Windows
-
-```bash
-venv\Scripts\activate
-```
-
-### Linux / macOS
-
-```bash
-source venv/bin/activate
-```
-
-## 3. Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-Example dependencies may include:
-
-```text
-cryptography
-pycryptodome
-pytest
-```
-
----
-
-# Running the Application
+# Running the CLI Application
 
 ```bash
 python app.py
+```
+
+# Running The Streamlit Application
+
+```bash
+streamlit run ui_app.py
 ```
 
 The CLI can be extended to support commands such as:
@@ -155,7 +127,7 @@ The CLI can be extended to support commands such as:
 # Example User Data Layout
 
 ```text
-data/users/alice/
+data/users/amr/
 ├── private_key.json
 ├── public_key.json
 └── vault.json
@@ -166,8 +138,18 @@ Example `public_key.json`:
 ```json
 {
   "p": "...",
-  "g": "...",
+  "alpha": "...",
   "y": "..."
+}
+```
+
+Example `private_key.json`:
+
+```json
+{
+  "p": "...",
+  "alpha": "...",
+  "x": "..."
 }
 ```
 
@@ -175,13 +157,10 @@ Example `vault.json`:
 
 ```json
 {
-  "entries": [
-    {
-      "site": "example.com",
-      "username": "alice@example.com",
-      "password": "<encrypted>"
-    }
-  ],
+  "owner": "",
+  "ciphertext": "",
+  "nonce": "",
+  "tag": "",
   "signature": {
     "r": "...",
     "s": "..."

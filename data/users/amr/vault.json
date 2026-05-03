@@ -1,0 +1,11 @@
+{
+  "owner": "amr",
+  "ciphertext": "v7s=",
+  "nonce": "7qVzOBzDU47J2qMwS6pY4Q==",
+  "tag": "QEDidd3LjDa1k87LALa5yw==",
+  "signature": {
+    "r": 101,
+    "s": 100,
+    "message_hash": 284
+  }
+}
