@@ -20,8 +20,7 @@ def run_cli():
         print("5. delete-credential")
         print("6. verify-vault")
         print("7. export-vault")
-        print("8. import-vault")
-        print("9. exit")
+        print("8. exit")
 
         choice = input("Choose: ").strip()
 
@@ -47,14 +46,11 @@ def run_cli():
             handle_export_vault()
 
         elif choice == "8":
-            handle_import_vault()
-
-        elif choice == "9":
             print("Goodbye.")
             break
 
         else:
-            print("Invalid choice. Please choose a number from 1 to 9.")
+            print("Invalid choice. Please choose a number from 1 to 8.")
 
 
 if __name__ == "__main__":

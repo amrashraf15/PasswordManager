@@ -1,11 +1,11 @@
 {
   "owner": "bob",
-  "ciphertext": "ec7mKuzt0zcAZudYb42DhRHY5gGETH+24RzYcPpFT1PtJp8bRU3BIyd/yIxhXDdiP0NFbOcdNKbMl/BBUwtI0dkLuyF8N4rhjND3S5zvQMOs6A==",
-  "nonce": "Ql6Rg0ak9h/surpaSbdjzQ==",
-  "tag": "U1TD8eOGZsOyjuQ7IFyfzg==",
+  "ciphertext": "38b41oRmff1lENT1wi7RcobEzis0V9Ryq/r0BqafWl6SZFnCXAmYdxRi8B6vWy09tvqhCsuKYc01r4TTIIGGzruLybDUOYxDiPjGe4qFuZvi+g==",
+  "nonce": "QARie4gAfeZYRAdI5tqDtw==",
+  "tag": "eh1msizErhUEyf4fZ6TkgA==",
   "signature": {
-    "r": 116,
-    "s": 64,
-    "message_hash": 272
+    "r": 72,
+    "s": 290,
+    "message_hash": 358
   }
 }

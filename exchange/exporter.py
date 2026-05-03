@@ -40,6 +40,7 @@ def secure_export_vault(sender_username: str, sender_pwd: str, recipient_usernam
     
     # Transfer Phase
     sender_vault = load_vault(sender_username)
+    # make sure nt changed
     if not verify_vault_data(sender_vault, sender_pub):
         raise ValueError("Sender vault signature is invalid!")
     credentials = decrypt_credentials(sender_vault, sender_pwd)

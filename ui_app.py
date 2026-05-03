@@ -7,6 +7,8 @@ from vault.vault_manager import (
     update_credential,
     delete_credential,
 )
+from vault.signer import verify_user_vault
+from exchange.exporter import secure_export_vault
 
 
 st.set_page_config(
@@ -52,6 +54,8 @@ operation = st.sidebar.selectbox(
         "Get Credential",
         "Update Credential",
         "Delete Credential",
+        "Verify Vault",
+        "Export Vault",
     ],
 )
 
@@ -191,5 +195,49 @@ elif operation == "Delete Credential":
             )
 
             st.success("Credential deleted successfully.")
+
+        safe_action(action)
+
+
+elif operation == "Verify Vault":
+    st.header("Verify Vault Integrity")
+
+    username = st.text_input("Username")
+
+    if st.button("Verify Vault"):
+        def action():
+            clean_username = required(username, "Username")
+
+            result = verify_user_vault(clean_username)
+
+            if result:
+                st.success("Vault signature is valid.")
+            else:
+                st.error("Vault signature is INVALID! The vault may have been tampered with.")
+
+        safe_action(action)
+
+
+elif operation == "Export Vault":
+    st.header("Export Vault")
+
+    sender_username = st.text_input("Sender Username")
+    sender_password = st.text_input("Sender Master Password", type="password")
+    recipient_username = st.text_input("Recipient Username")
+    recipient_password = st.text_input("Recipient Master Password", type="password")
+
+    if st.button("Export Vault"):
+        def action():
+            clean_sender = required(sender_username, "Sender username")
+            clean_sender_pwd = required(sender_password, "Sender master password")
+            clean_recipient = required(recipient_username, "Recipient username")
+            clean_recipient_pwd = required(recipient_password, "Recipient master password")
+
+            success = secure_export_vault(clean_sender, clean_sender_pwd, clean_recipient, clean_recipient_pwd)
+
+            if success:
+                st.success("Vault exported and imported successfully.")
+            else:
+                st.error("Export failed.")
 
         safe_action(action)
